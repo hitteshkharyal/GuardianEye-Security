@@ -1,65 +1,159 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import Preloader from '@/components/core/Preloader';
+import Navbar from '@/components/core/Navbar';
+import CustomCursor from '@/components/core/CustomCursor';
+import Footer from '@/components/core/Footer';
+import SectionDivider from '@/components/core/SectionDivider';
+import { useAppStore } from '@/lib/store/useAppStore';
+
+// Dynamic imports for heavy 3D sections
+const HeroSection = dynamic(() => import('@/components/sections/HeroSection'), {
+  ssr: false,
+  loading: () => <div className="h-screen bg-bg-primary" />,
+});
+
+const LensFlyThrough = dynamic(() => import('@/components/sections/LensFlyThrough'), {
+  ssr: false,
+  loading: () => <div style={{ height: '400vh' }} className="bg-bg-primary" />,
+});
+
+// Other sections can render SSR
+import MonitoringWorld from '@/components/sections/MonitoringWorld';
+import ProductShowcase from '@/components/sections/ProductShowcase';
+import GlobalNetwork from '@/components/sections/GlobalNetwork';
+import IndustrySolutions from '@/components/sections/IndustrySolutions';
+import AIStorytelling from '@/components/sections/AIStorytelling';
+import ProcessJourney from '@/components/sections/ProcessJourney';
+import Testimonials from '@/components/sections/Testimonials';
+import ContactSection from '@/components/sections/ContactSection';
+
+export default function HomePage() {
+  const isLoading = useAppStore((s) => s.isLoading);
+
+  useEffect(() => {
+    // Lenis smooth scroll setup
+    const initLenis = async () => {
+      const Lenis = (await import('lenis')).default;
+      const lenis = new Lenis({
+        duration: 1.4,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        smoothWheel: true,
+      });
+
+      const { gsap } = await import('gsap');
+      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      gsap.registerPlugin(ScrollTrigger);
+
+      lenis.on('scroll', ScrollTrigger.update);
+
+      gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+
+      return lenis;
+    };
+
+    let lenis: Awaited<ReturnType<typeof initLenis>> | null = null;
+
+    if (!isLoading) {
+      initLenis().then((l) => { lenis = l; });
+    }
+
+    return () => {
+      if (lenis) {
+        (lenis as { destroy?: () => void }).destroy?.();
+      }
+    };
+  }, [isLoading]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      {/* Noise texture overlay */}
+      <div className="noise-overlay" aria-hidden="true" />
+
+      {/* Ambient scan line */}
+      <div className="scan-line" aria-hidden="true" />
+
+      {/* Custom cursor */}
+      <CustomCursor />
+
+      {/* Preloader */}
+      <Preloader />
+
+      {/* Main content */}
+      <main className={`transition-opacity duration-700 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+        <Navbar />
+
+        {/* Section 1: Hero */}
+        <HeroSection />
+
+        {/* Section 2: Lens Fly-Through (Signature Experience) */}
+        <LensFlyThrough />
+
+        {/* Section 3: AI Monitoring World */}
+        <MonitoringWorld />
+
+        <SectionDivider sectionId="SEC_03" label="AI_MONITORING_ONLINE" />
+
+        {/* Section 4: Product Showcase */}
+        <ProductShowcase />
+
+        <SectionDivider sectionId="SEC_04" label="OPTICS_CALIBRATION_OK" />
+
+        {/* Section 5: Global Network */}
+        <GlobalNetwork />
+
+        <SectionDivider sectionId="SEC_05" label="NETWORK_SYNC_ACTIVE" />
+
+        {/* Section 6: Industry Solutions */}
+        <IndustrySolutions />
+
+        <SectionDivider sectionId="SEC_06" label="SECURITY_POLICIES_APPLIED" />
+
+        {/* Section 7: AI Storytelling */}
+        <AIStorytelling />
+
+        <SectionDivider sectionId="SEC_07" label="NEURAL_NET_LOAD_12%" />
+
+        {/* Section 8: Process Journey */}
+        <ProcessJourney />
+
+        <SectionDivider sectionId="SEC_08" label="DEPLOYMENT_FLOW_READY" />
+
+        {/* Section 9: Testimonials */}
+        <Testimonials />
+
+        <SectionDivider sectionId="SEC_09" label="COMMUNICATION_ESTABLISHED" />
+
+        {/* Section 10: Contact */}
+        <ContactSection />
+
+        <Footer />
       </main>
-    </div>
+
+      {/* Floating WhatsApp button */}
+      <a
+        href="https://wa.me/918000000000?text=Hi%2C%20I%27m%20interested%20in%20CCTV%20installation"
+        target="_blank"
+        rel="noopener noreferrer"
+        id="floating-whatsapp-btn"
+        className={`fixed bottom-8 right-8 z-[8000] flex items-center gap-3 glass-accent px-4 py-3 transition-all duration-500 hover:scale-105 cursor-none ${isLoading ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}
+        aria-label="Chat on WhatsApp"
+        style={{
+          border: '1px solid rgba(0,212,255,0.2)',
+          boxShadow: '0 0 20px rgba(0,212,255,0.15)',
+        }}
+      >
+        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+        <span className="text-xs tracking-widest uppercase font-inter text-white/70">
+          Expert Online
+        </span>
+      </a>
+    </>
   );
 }

@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GuardianEye Security
+
+A premium, high-performance web application for a modern CCTV and Security solutions company. This project features cutting-edge UI/UX, smooth scroll animations, and dynamic 3D elements to create a "wow" experience for visitors.
+
+## Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Animations**: [GSAP](https://greensock.com/gsap/) (ScrollTrigger) & CSS Animations
+- **Smooth Scrolling**: [Lenis](https://lenis.darkroom.engineering/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **Form Handling**: React Hook Form & Zod
+
+## Key Features
+
+- **Dynamic Hero Section**: Real-time canvas scanning effect with floating interface elements.
+- **Lens Fly-Through Experience**: A GSAP-powered 3D tunnel scroll animation simulating a camera lens assembly.
+- **Horizontal Product Showcase**: Pin-and-scroll horizontal track for hardware products.
+- **Interactive Storytelling**: Scroll-triggered text revealing and metric counting.
+- **Global Network Map**: Pulse animations and connection lines mapping out service coverage.
+- **Premium Aesthetics**: Dark mode default, neon cyan accents (`#00D4FF`), glassmorphism cards, and technical monospace typography elements.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
+
+### Installation
+
+1. Clone the repository (if you haven't already).
+2. Install the dependencies:
+   ```bash
+   npm install
+   ```
+
+### Environment Variables
+
+Copy the example environment file and fill in your local details if you are connecting to a backend:
+
+```bash
+cp .env.example .env.local
+```
+
+### Running the Development Server
+
+Start the local server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/app`: Next.js App Router layout, page, and global CSS.
+- `/components/core`: Reusable UI elements (Navbar, Footer, SectionDivider, Preloader).
+- `/components/sections`: The major building blocks of the homepage (HeroSection, LensFlyThrough, ContactSection, etc.).
+- `/lib`: Utilities and Zustand store configuration.
 
-## Learn More
+## Future Backend Integration
 
-To learn more about Next.js, take a look at the following resources:
+The project is currently a frontend-only Next.js application, perfectly styled and animated. Environment files (`.env.local`) have been set up in preparation for the backend phase (e.g., connecting the contact form to a database or CRM).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All rights reserved by GuardianEye Security.
